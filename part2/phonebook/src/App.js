@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import personService from './services/persons';
 import Filter from './components/Filter';
+import Notification from './components/Notification';
 var _ = require('lodash');
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  const [persons, setPersons] = useState([]);
   const [showList, setShowList] = useState([]);
   const [newNumber, setNewNumber] = useState('');
   const [newName, setNewName] = useState('');
+  const [message, setMessage] = useState(null);
+
+  const getAllData = () => personService.getAll().then(res => setPersons(res));
+
+  useEffect(() => {
+    getAllData();
+  }, [])
 
   const addName = (e) => {
     e.preventDefault();
@@ -30,9 +34,17 @@ const App = () => {
     })
 
     if (!isUsed) {
-      setPersons(persons.concat(personObject));
-      setNewName('');
-      setNewNumber('');
+      personService.create(personObject)
+        .then(res => {
+          setPersons(persons.concat(personObject));
+          setNewName('');
+          setNewNumber('');
+          getAllData();
+          setMessage(`Added ${personObject.name}`);
+
+          setTimeout(() => setMessage(null), 5000);
+        })
+        .catch(err => console.log(err))
     }
   }
 
@@ -46,9 +58,19 @@ const App = () => {
     if (show.length) setShowList(show);
   }
 
+  const deletePerson = person => {
+    if (window.confirm(`delete ${person.name}?`)) {
+      personService.deletePerson(person.id)
+        .then(res => {
+          getAllData();
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} />
       <form onSubmit={addName}>
         <div>
@@ -62,7 +84,10 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {showList.map(p => <p key={p.id}>{p.name} {p.number}</p>)}
+      {showList.length
+        ? showList.map(p => <><p key={p.id}>{p.name} {p.number}</p><button onClick={() => deletePerson(p)}>delete</button></>)
+        : persons.map(p => <><p key={p.id}>{p.name} {p.number}</p><button onClick={() => deletePerson(p)}>delete</button></>)
+      }
     </div>
   )
 }
