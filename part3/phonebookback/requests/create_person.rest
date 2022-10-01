@@ -1,0 +1,8 @@
+post http://localhost:3333/api/persons/
+Content-Type: application/json
+
+
+    {
+        "name": "Arto BAD ASS",
+        "number": "04012-1239"
+    }
