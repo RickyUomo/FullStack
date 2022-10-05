@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import personService from './services/persons';
+import personService from './services/personsabc';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
 var _ = require('lodash');
@@ -53,7 +53,6 @@ const App = () => {
 
   const filter = e => {
     const filterName = e.target.value.toLowerCase();
-    console.log(['filterName'], filterName);
     const show = _.filter(persons, p => p.name.toLowerCase().indexOf(filterName) > -1);
     if (show.length) setShowList(show);
   }
@@ -69,7 +68,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2 style={{ color: "green" }}>Phonebook</h2>
       <Notification message={message} />
       <Filter filter={filter} />
       <form onSubmit={addName}>
