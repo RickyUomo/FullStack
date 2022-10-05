@@ -1,9 +1,11 @@
 const express = require('express');
-const morgan = require('morgan')
+const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
-const PORT = 3333;
+const PORT = process.env.PORT || 3001;
 app.use(express.json());
-
+app.use(cors());
+app.use(express.static('build'));
 morgan.token('reqBody', (req, res) => JSON.stringify(req.body));
 
 app.use(morgan(function (tokens, req, res) {
@@ -40,9 +42,12 @@ let persons = [
     }
 ];
 
-app.get('/api/persons', (req, res) => {
+app.get('/', (req, res) => {
+    return res.end('Phonebook exercise!');
+});
 
-    return res.status(200).json(persons);
+app.get('/api/persons', (req, res) => {
+    return res.json(persons);
 });
 
 app.get('/api/persons/:id', (req, res) => {
