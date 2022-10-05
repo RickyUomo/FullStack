@@ -2,4 +2,4 @@
 
 ## University of Helsinki open course
 
-### https://phobebook.fly.dev/
+### Phonebook: https://phobebook.fly.dev/
