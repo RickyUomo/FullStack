@@ -43,7 +43,7 @@ async function run() {
 
 
     try {
-        const persons = await Person.find({ name: "Anna" });
+        const persons = await Person.find({});
         persons.forEach(p => console.log(p))
         mongoose.connection.close()
     } catch (err) {
