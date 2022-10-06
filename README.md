@@ -1,4 +1,4 @@
-# fullstack
+# Fullstack
 
 ## University of Helsinki open course
 
