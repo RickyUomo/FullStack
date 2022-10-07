@@ -69,11 +69,9 @@ app.get('/info', (req, res) => {
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
-    Person.findByIdAndRemove(request.params.id)
-        .then(result => {
-            response.status(204).end();
-        })
-        .catch(error => next(error))
+    Person.findByIdAndRemove(req.params.id)
+        .then(result => res.status(204).end())
+        .catch(error => next(error));
 });
 
 app.post('/api/persons', (req, res) => {
