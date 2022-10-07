@@ -34,12 +34,12 @@ async function run() {
         number
     })
 
-    // try {
-    //     await person.save()
-    //     console.log(`added ${name} number ${number}`);
-    // } catch (err) {
-    //     console.log(err);
-    // }
+    try {
+        await person.save()
+        console.log(`added ${name} number ${number}`);
+    } catch (err) {
+        console.log(err);
+    }
 
 
     try {
