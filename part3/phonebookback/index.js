@@ -33,30 +33,6 @@ mongoose.connect(url)
         // mongoose.connection.close();
     });
 
-
-let persons = [
-    {
-        id: 1,
-        name: 'Arto Hello',
-        number: "04012-1239"
-    },
-    {
-        id: 2,
-        name: 'Arto Bad',
-        number: "040-1999234"
-    },
-    {
-        id: 3,
-        name: 'Good Hello',
-        number: "040-123234"
-    },
-    {
-        id: 4,
-        name: 'Dell Hello',
-        number: "040-12323234"
-    }
-];
-
 app.get('/', (req, res) => {
     return res.end('Phonebook exercise!');
 });
@@ -80,7 +56,8 @@ app.get('/api/persons/:id', (req, res, next) => {
 
 app.get('/info', (req, res) => {
     const time = new Date();
-    const numOfPeople = persons.length;
+    const numOfPeople = Person.length;
+
     res.send(`
         <h3> The phonebook has info for ${numOfPeople} </h3 >
         <p>${time}</p>
@@ -91,7 +68,6 @@ app.delete('/api/persons/:id', (req, res) => {
     const id = +req.params.id;
     persons = persons.filter(p => p.id !== id);
 
-    console.log(persons);
     res.status(204).end();
 });
 
