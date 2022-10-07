@@ -47,10 +47,14 @@ app.get('/api/persons/:id', (req, res, next) => {
     const ID = req.params.id || null;
     if (!ID) return res.status(404).end('no such a person');
     Person.findById(ID)
-        .then(p => res.json(p))
+        .then(p => {
+            console.log(['p'], p);
+            if (p) res.json(p);
+            else res.status(404).send('<h1>Person Not Found</h1>');
+        })
         .catch(error => {
             console.log(new Date(), 'cannot find the person', error.message);
-            return res.status(404).send('<h1>Person Not Found</h1>');
+            next(error);
         });
 })
 
@@ -64,11 +68,12 @@ app.get('/info', (req, res) => {
     `);
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = +req.params.id;
-    persons = persons.filter(p => p.id !== id);
-
-    res.status(204).end();
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end();
+        })
+        .catch(error => next(error))
 });
 
 app.post('/api/persons', (req, res) => {
@@ -83,6 +88,20 @@ app.post('/api/persons', (req, res) => {
 
     person.save()
         .then(savedPerson => res.json(savedPerson))
-})
+});
 
-app.listen(PORT);
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+    if (error.name === 'CastError') return response.status(400).send({ error: 'malformatted id' });
+
+    next(error)
+};
+app.use(errorHandler);
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+});
