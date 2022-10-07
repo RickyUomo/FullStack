@@ -35,13 +35,8 @@ async function run() {
     })
 
     try {
-<<<<<<< HEAD
-        await person.save()
-        console.log(`added ${name} number ${number}`);
-=======
         await person.save();
         console.log(`added ${name} number ${number}!!!!`);
->>>>>>> main
     } catch (err) {
         console.log(err);
     }
