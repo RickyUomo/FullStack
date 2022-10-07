@@ -67,22 +67,24 @@ app.get('/api/persons', (req, res) => {
     })
 });
 
-app.get('/api/persons/:id', (req, res) => {
-    const id = +req.params.id;
-    const person = persons.find(p => p.id === id);
-
-    if (!person) res.status(404).end();
-
-    res.json(person);
+app.get('/api/persons/:id', (req, res, next) => {
+    const ID = req.params.id || null;
+    if (!ID) return res.status(404).end('no such a person');
+    Person.findById(ID)
+        .then(p => res.json(p))
+        .catch(error => {
+            console.log(new Date(), 'cannot find the person', error.message);
+            return res.status(404).send('<h1>Person Not Found</h1>');
+        });
 })
 
 app.get('/info', (req, res) => {
     const time = new Date();
     const numOfPeople = persons.length;
     res.send(`
-    < h3 > The phonebook has info for ${numOfPeople} </h3 >
+        <h3> The phonebook has info for ${numOfPeople} </h3 >
         <p>${time}</p>
-`);
+    `);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -95,28 +97,16 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body;
-    const isNameExisted = persons.find(p => p.name === req.body.name);
 
-    if (!body.name) {
-        return res.status(400).json({
-            error: "name is missing"
-        })
-    } else if (isNameExisted) {
-        return res.status(400).json({
-            error: "name must be unique"
-        })
-    }
+    if (!body.name) return res.status(400).json({ error: "name is missing" });
 
-    const person = {
-        id: Math.floor(Math.random() * 9999999),
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
+    })
 
-    console.log(['morgan'], morgan.token);
-
-    persons = persons.concat(person);
-    res.json(person);
+    person.save()
+        .then(savedPerson => res.json(savedPerson))
 })
 
 app.listen(PORT);
