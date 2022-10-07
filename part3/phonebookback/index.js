@@ -1,8 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const Person = require('./Person');
 const app = express();
 const PORT = process.env.PORT || 3001;
+const url = process.env.MONGODB_URI;
 app.use(express.json());
 app.use(cors());
 app.use(express.static('build'));
@@ -18,6 +22,17 @@ app.use(morgan(function (tokens, req, res) {
         tokens.reqBody(req, res)
     ].join(' ')
 }));
+
+mongoose.connect(url)
+    .then(result => {
+        console.log('connected to MongoDB');
+        // mongoose.connection.close();
+    })
+    .catch(error => {
+        console.log('error connecting to MongoDB:', error.message);
+        // mongoose.connection.close();
+    });
+
 
 let persons = [
     {
@@ -47,7 +62,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/persons', (req, res) => {
-    return res.json(persons);
+    Person.find({}).then(p => {
+        res.json(p);
+    })
 });
 
 app.get('/api/persons/:id', (req, res) => {
@@ -63,9 +80,9 @@ app.get('/info', (req, res) => {
     const time = new Date();
     const numOfPeople = persons.length;
     res.send(`
-        <h3>The phonebook has info for ${numOfPeople} </h3>
+    < h3 > The phonebook has info for ${numOfPeople} </h3 >
         <p>${time}</p>
-    `);
+`);
 });
 
 app.delete('/api/persons/:id', (req, res) => {
