@@ -74,18 +74,34 @@ app.delete('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', async (req, res, next) => {
     const body = req.body;
 
     if (!body.name) return res.status(400).json({ error: "name is missing" });
 
-    const person = new Person({
-        name: body.name,
-        number: body.number
-    })
+    try {
 
-    person.save()
-        .then(savedPerson => res.json(savedPerson))
+        const findPerson = await Person.find({ name: body.name });
+
+        if (findPerson.length > 0) {
+            const id = findPerson[0]._id.toString();
+            const person = { name: body.name, number: body.number };
+            const updatePerson = await Person.findByIdAndUpdate(id, person, { new: true });
+            res.json(updatePerson);
+
+        } else {
+            const person = new Person({
+                name: body.name,
+                number: body.number
+            });
+
+            person.save()
+                .then(savedPerson => res.json(savedPerson))
+        }
+
+    } catch (error) {
+        next(error);
+    }
 });
 
 const unknownEndpoint = (request, response) => {
