@@ -1,14 +1,13 @@
 require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const Person = require('./Person');
+// const cors = require('cors');
+const Person = require('./model/Person');
 const app = express();
 const PORT = process.env.PORT || 3001;
-const url = process.env.MONGODB_URI;
+
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 app.use(express.static('build'));
 morgan.token('reqBody', (req, res) => JSON.stringify(req.body));
 
@@ -22,16 +21,6 @@ app.use(morgan(function (tokens, req, res) {
         tokens.reqBody(req, res)
     ].join(' ')
 }));
-
-mongoose.connect(url)
-    .then(result => {
-        console.log('connected to MongoDB');
-        // mongoose.connection.close();
-    })
-    .catch(error => {
-        console.log('error connecting to MongoDB:', error.message);
-        // mongoose.connection.close();
-    });
 
 app.get('/', (req, res) => {
     return res.end('Phonebook exercise!');
