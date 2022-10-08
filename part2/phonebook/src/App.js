@@ -26,12 +26,12 @@ const App = () => {
       number: newNumber
     };
 
-    _.each(persons, p => {
-      if (_.isEqual(p.name, personObject.name) || _.isEqual(p.number, personObject.number)) {
-        alert(`${newName} or ${newNumber} has been used!`);
-        isUsed = true;
-      }
-    })
+    // _.each(persons, p => {
+    //   if (_.isEqual(p.name, personObject.name) || _.isEqual(p.number, personObject.number)) {
+    //     alert(`${newName} or ${newNumber} has been used!`);
+    //     isUsed = true;
+    //   }
+    // })
 
     if (!isUsed) {
       personService.create(personObject)
