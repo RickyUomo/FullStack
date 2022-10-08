@@ -80,7 +80,6 @@ app.post('/api/persons', async (req, res, next) => {
     if (!body.name) return res.status(400).json({ error: "name is missing" });
 
     try {
-
         const findPerson = await Person.find({ name: body.name });
 
         if (findPerson.length > 0) {
@@ -95,8 +94,8 @@ app.post('/api/persons', async (req, res, next) => {
                 number: body.number
             });
 
-            person.save()
-                .then(savedPerson => res.json(savedPerson))
+            const savedPerson = await person.save();
+            res.json(savedPerson);
         }
 
     } catch (error) {
