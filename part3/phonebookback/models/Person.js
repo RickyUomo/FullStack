@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
+// eslint-disable-next-line no-undef
 const url = process.env.MONGODB_URI;
 
 mongoose.connect(url)
+    // eslint-disable-next-line no-unused-vars
     .then(result => {
         console.log('connected to MongoDB');
     })
@@ -11,7 +13,7 @@ mongoose.connect(url)
     });
 
 const phoneNumberValidator = (val) => {
-    const ary = val.split("-", 2);
+    const ary = val.split('-', 2);
     const first = +ary[0],
         second = +ary[1],
         fLength = first.toString().length;
@@ -36,9 +38,9 @@ const personSchema = new mongoose.Schema({
 
 personSchema.set('toJSON', {
     transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
     }
 });
 
