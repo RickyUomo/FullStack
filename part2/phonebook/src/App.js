@@ -9,7 +9,7 @@ const App = () => {
   const [showList, setShowList] = useState([]);
   const [newNumber, setNewNumber] = useState('');
   const [newName, setNewName] = useState('');
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState({ content: '', error: false });
 
   const getAllData = () => personService.getAll().then(res => setPersons(res));
 
@@ -40,11 +40,14 @@ const App = () => {
           setNewName('');
           setNewNumber('');
           getAllData();
-          setMessage(`Added ${personObject.name}`);
+          setMessage({ content: `Added ${personObject.name}`, error: false });
 
           setTimeout(() => setMessage(null), 5000);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          console.log(err)
+          setMessage({ content: err, error: true });
+        })
     }
   }
 
@@ -66,6 +69,7 @@ const App = () => {
     }
   }
 
+  // console.log(message);
   return (
     <div>
       <h2 style={{ color: "green" }}>Phonebook</h2>

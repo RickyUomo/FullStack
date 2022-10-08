@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:3000/api/persons';
+const baseURL = '/persons';
 
 const getAll = () => {
     const response = axios.get(baseURL);
@@ -20,4 +20,6 @@ const deletePerson = (id) => {
     });
 }
 
-export default { getAll, create, deletePerson }
+const personService = { getAll, create, deletePerson };
+
+export default personService;

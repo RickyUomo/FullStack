@@ -1,14 +1,19 @@
 const Notification = ({ message }) => {
-    const error = {
+    const fail = {
         color: 'red',
+        fontStyle: 'italic',
+        fontSize: 25,
+    }
+    const success = {
+        color: 'blue',
         fontStyle: 'italic',
         fontSize: 25,
     }
     if (message === null) return null;
 
     return (
-        <div style={error}>
-            {message}
+        <div style={message.error ? fail : success}>
+            {message.content}
         </div>
     )
 }
