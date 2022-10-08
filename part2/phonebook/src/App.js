@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import personService from './services/personsabc';
+import personService from './services/person';
 import Filter from './components/Filter';
 import Notification from './components/Notification';
 var _ = require('lodash');

@@ -6,7 +6,6 @@ const Notification = ({ message }) => {
     }
     if (message === null) return null;
 
-    console.log(error);
     return (
         <div style={error}>
             {message}
