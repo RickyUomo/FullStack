@@ -11,7 +11,6 @@ mongoose.connect(url)
     });
 
 const phoneNumberValidator = (val) => {
-
     const ary = val.split("-", 2);
     const first = +ary[0],
         second = +ary[1],
