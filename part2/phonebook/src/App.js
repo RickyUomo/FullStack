@@ -9,7 +9,7 @@ const App = () => {
   const [showList, setShowList] = useState([]);
   const [newNumber, setNewNumber] = useState('');
   const [newName, setNewName] = useState('');
-  const [message, setMessage] = useState({ content: '', error: false });
+  const [message, setMessage] = useState({});
 
   const getAllData = () => personService.getAll().then(res => setPersons(res));
 
@@ -69,7 +69,6 @@ const App = () => {
     }
   }
 
-  // console.log(message);
   return (
     <div>
       <h2 style={{ color: "green" }}>Phonebook</h2>
