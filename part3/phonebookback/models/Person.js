@@ -10,6 +10,17 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message);
     });
 
+const phoneNumberValidator = (val) => {
+
+    const ary = val.split("-", 2);
+    const first = +ary[0],
+        second = +ary[1],
+        fLength = first.toString().length;
+    if (!first || !second || fLength <= 1 || fLength > 3) return false;
+};
+
+const phoneNumberCustom = [phoneNumberValidator, 'The format of phone number is wrong!'];
+
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -18,8 +29,9 @@ const personSchema = new mongoose.Schema({
     },
     number: {
         type: String,
-        minLength: 5,
-        required: true
+        minLength: 8,
+        required: true,
+        validate: phoneNumberCustom
     }
 });
 
