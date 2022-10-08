@@ -42,11 +42,12 @@ const App = () => {
           getAllData();
           setMessage({ content: `Added ${personObject.name}`, error: false });
 
-          setTimeout(() => setMessage(null), 5000);
+          setTimeout(() => setMessage({}), 5000);
         })
         .catch(err => {
-          console.log(err)
-          setMessage({ content: err, error: true });
+          console.log(['error'], err)
+          setMessage({ content: err.response.data.error, error: true });
+          setTimeout(() => setMessage({}), 5000);
         })
     }
   }
