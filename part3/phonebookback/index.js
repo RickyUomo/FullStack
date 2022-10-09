@@ -6,7 +6,6 @@ const config = require('./utils/config');
 const phonebookRouter = require('./controllers/phonebook');
 
 app.use(express.json());
-// app.use(cors());
 app.use(express.static('build'));
 morgan.token('reqBody', (req) => JSON.stringify(req.body));
 
