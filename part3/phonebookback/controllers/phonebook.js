@@ -29,15 +29,13 @@ phonebookRouter.get('/about/info', (request, response) => {
     const time = new Date();
     const numOfPeople = Person.length;
 
-    console.log('info!!');
-
     response.status(200).send(`
         <h3> The phonebook has info for ${numOfPeople} </h3 >
         <p>${time}</p>
     `);
 });
 
-phonebookRouter.post('/:id', async (request, response, next) => {
+phonebookRouter.post('/', async (request, response, next) => {
 
     const body = request.body,
         name = body.name || null,
