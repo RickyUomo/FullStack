@@ -1,9 +1,9 @@
 const express = require('express');
 const morgan = require('morgan');
-const Person = require('./models/Person');
 const app = express();
 const logger = require('./utils/logger');
 const config = require('./utils/config');
+const phonebookRouter = require('./controllers/phonebook');
 
 app.use(express.json());
 // app.use(cors());
@@ -21,74 +21,7 @@ app.use(morgan(function (tokens, req, res) {
     ].join(' ');
 }));
 
-app.get('/', (req, res) => {
-    return res.end('Phonebook exercise!');
-});
-
-app.get('/api/persons', (req, res) => {
-    Person.find({}).then(p => {
-        res.json(p);
-    });
-});
-
-app.get('/api/persons/:id', (req, res, next) => {
-    const ID = req.params.id || null;
-    if (!ID) return res.status(404).end('no such a person');
-    Person.findById(ID)
-        .then(p => {
-            if (p) res.json(p);
-            else res.status(404).send('<h1>Person Not Found</h1>');
-        })
-        .catch(error => {
-            logger.info(new Date(), 'cannot find the person', error.message);
-            next(error);
-        });
-});
-
-app.get('/info', (req, res) => {
-    const time = new Date();
-    const numOfPeople = Person.length;
-
-    res.send(`
-        <h3> The phonebook has info for ${numOfPeople} </h3 >
-        <p>${time}</p>
-    `);
-});
-
-app.delete('/api/persons/:id', (req, res, next) => {
-    Person.findByIdAndRemove(req.params.id)
-        .then(() => res.status(204).end())
-        .catch(error => next(error));
-});
-
-app.post('/api/persons', async (req, res, next) => {
-    const body = req.body;
-
-    if (!body.name) return res.status(400).json({ error: 'name is missing' });
-
-    try {
-        const findPerson = await Person.find({ name: body.name });
-
-        if (findPerson.length > 0) {
-            const id = findPerson[0]._id.toString();
-            const person = { name: body.name, number: body.number };
-            const updatePerson = await Person.findByIdAndUpdate(id, person, { new: true, runValidators: true, context: 'query' });
-            res.json(updatePerson);
-
-        } else {
-            const person = new Person({
-                name: body.name,
-                number: body.number
-            });
-
-            const savedPerson = await person.save();
-            res.json(savedPerson);
-        }
-
-    } catch (error) {
-        next(error);
-    }
-});
+app.use('/api/persons', phonebookRouter);
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' });
