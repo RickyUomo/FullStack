@@ -6,6 +6,7 @@ const Person = require('./models/Person');
 const app = express();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 3001;
+const logger = require('./utils/logger');
 
 app.use(express.json());
 // app.use(cors());
@@ -38,12 +39,11 @@ app.get('/api/persons/:id', (req, res, next) => {
     if (!ID) return res.status(404).end('no such a person');
     Person.findById(ID)
         .then(p => {
-            console.log(['p'], p);
             if (p) res.json(p);
             else res.status(404).send('<h1>Person Not Found</h1>');
         })
         .catch(error => {
-            console.log(new Date(), 'cannot find the person', error.message);
+            logger.info(new Date(), 'cannot find the person', error.message);
             next(error);
         });
 });
@@ -107,5 +107,5 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    logger.info(`Server running on port ${PORT}`);
 });
