@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
+const config = require('../utils/config');
 
-// eslint-disable-next-line no-undef
-const url = process.env.MONGODB_URI;
-
-mongoose.connect(url)
+mongoose.connect(config.MONGODB_URI)
     // eslint-disable-next-line no-unused-vars
     .then(result => {
         console.log('connected to MongoDB');
