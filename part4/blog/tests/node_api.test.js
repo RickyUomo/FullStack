@@ -42,7 +42,7 @@ test('the first note is about HTTP methods', async () => {
     expect(author).toContain('Ricky');
 });
 
-test('a valid blog can be added', async () => {
+test.only('a valid blog can be added', async () => {
     const newBlog = {
         title: "wonderful life",
         author: "ricky",
@@ -92,7 +92,7 @@ test('can delete blog', async () => {
     expect(authors).not.toContain(blogToDelete.author);
 });
 
-test.only('blog id is defined', async () => {
+test('blog id is defined', async () => {
     const blogsStart = await helper.blogsInDb();
     const blogToView = blogsStart[0];
 
@@ -102,6 +102,24 @@ test.only('blog id is defined', async () => {
         .expect('Content-Type', /application\/json/);
 
     expect(resultBlog.body.id).toBeDefined();
+});
+
+test.only('if likes property is missing, the default value is 0', async () => {
+    const newBlog = {
+        title: "wonderful life",
+        author: "ricky",
+        url: "www.happy.com",
+        likes: null
+    };
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .set('Accept', 'application/json')
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    expect(response.body.likes).toEqual(0);
 })
 
 afterAll(() => {

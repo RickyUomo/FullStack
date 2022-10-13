@@ -25,6 +25,8 @@ blogRouter.get('/:id', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
     const blog = new Blog(request.body);
+    if (!blog.author || !blog.url || !blog.title) return response.status(400).end();
+    if (!blog.likes) blog.likes = 0;
 
     try {
         const savedBlog = await blog.save();
