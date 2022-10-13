@@ -92,6 +92,18 @@ test('can delete blog', async () => {
     expect(authors).not.toContain(blogToDelete.author);
 });
 
+test.only('blog id is defined', async () => {
+    const blogsStart = await helper.blogsInDb();
+    const blogToView = blogsStart[0];
+
+    const resultBlog = await api
+        .get(`/api/blogs/${blogToView.id}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+    expect(resultBlog.body.id).toBeDefined();
+})
+
 afterAll(() => {
     mongoose.connection.close();
 });
