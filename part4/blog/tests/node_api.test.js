@@ -5,16 +5,18 @@ const app = require('../app');
 const Blog = require('../models/Blog');
 const api = superagent(app);
 const helper = require('./test_helper');
+const { MONGODB_URI } = require('../utils/config');
 
 
-// beforeEach(async () => {
-//     await Blog.deleteMany({});
+beforeEach(async () => {
+    await mongoose.connect(MONGODB_URI); // prevent delete before connecting to the DB
+    await Blog.deleteMany({});
 
-//     let blogObject = new Blog(helper.initialBlogs[0]);
-//     await blogObject.save();
-//     blogObject = new Blog(helper.initialBlogs[1]);
-//     await blogObject.save();
-// });
+    let blogObject = new Blog(helper.initialBlogs[0]);
+    await blogObject.save();
+    blogObject = new Blog(helper.initialBlogs[1]);
+    await blogObject.save();
+});
 
 test('blogs are returned as json', async () => {
     await api.get('/api/blogs')
@@ -32,7 +34,7 @@ test('the first note is about HTTP methods', async () => {
     const response = await api.get('/api/blogs');
     const author = response.body.map(r => r.author);
 
-    expect(author).toContain('ricky');
+    expect(author).toContain('Ricky');
 });
 
 test('a valid blog can be added', async () => {
@@ -70,7 +72,20 @@ test('a specific blog to view', async () => {
     expect(resultBlog.body).toEqual(blogToView);
 });
 
+test('can delete blog', async () => {
+    const blogsStart = await helper.blogsInDb();
+    const blogToDelete = blogsStart[0];
 
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204);
+
+    const blogsEnd = await helper.blogsInDb();
+    expect(blogsEnd).toHaveLength(helper.initialBlogs.length - 1);
+
+    const authors = blogsEnd.map(b => b.author);
+    expect(authors).not.toContain(blogToDelete.author);
+});
 
 afterAll(() => {
     mongoose.connection.close();
