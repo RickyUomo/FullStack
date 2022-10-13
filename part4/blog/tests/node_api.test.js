@@ -12,10 +12,15 @@ beforeEach(async () => {
     await mongoose.connect(MONGODB_URI); // prevent delete before connecting to the DB
     await Blog.deleteMany({});
 
-    let blogObject = new Blog(helper.initialBlogs[0]);
-    await blogObject.save();
-    blogObject = new Blog(helper.initialBlogs[1]);
-    await blogObject.save();
+    // let blogObject = new Blog(helper.initialBlogs[0]);
+    // await blogObject.save();
+    // blogObject = new Blog(helper.initialBlogs[1]);
+    // await blogObject.save();
+
+    const blogObjects = helper.initialBlogs.map(b => new Blog(b));
+    const promiseArray = blogObjects.map(b => b.save());
+    const result = await Promise.all(promiseArray);
+    // console.log(['result'], result);
 });
 
 test('blogs are returned as json', async () => {
