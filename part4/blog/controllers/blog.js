@@ -9,14 +9,29 @@ blogRouter.get('/', (request, response) => {
         });
 });
 
-blogRouter.post('/', (request, response) => {
+blogRouter.get('/:id', async (request, response) => {
+    const id = request.params.id || null;
+
+    if (!id) return response.status(404).end();
+
+    try {
+        const blog = await Blog.findById(id);
+
+        return response.json(blog)
+    } catch (error) {
+        next(error);
+    }
+})
+
+blogRouter.post('/', async (request, response) => {
     const blog = new Blog(request.body);
 
-    blog
-        .save()
-        .then(result => {
-            response.status(201).json(result);
-        });
+    try {
+        const savedBlog = await blog.save();
+        response.status(201).json(savedBlog);
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = blogRouter;
