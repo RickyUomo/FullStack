@@ -9,7 +9,7 @@ blogRouter.get('/', (request, response) => {
         });
 });
 
-blogRouter.get('/:id', async (request, response) => {
+blogRouter.get('/:id', async (request, response, next) => {
     const id = request.params.id || null;
 
     if (!id) return response.status(404).end();
@@ -23,7 +23,7 @@ blogRouter.get('/:id', async (request, response) => {
     }
 })
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', async (request, response, next) => {
     const blog = new Blog(request.body);
     if (!blog.author || !blog.url || !blog.title) {
         console.log('youre coming to error', blog);
@@ -39,13 +39,26 @@ blogRouter.post('/', async (request, response) => {
     }
 });
 
-blogRouter.delete('/:id', async (request, response) => {
+blogRouter.delete('/:id', async (request, response, next) => {
     const id = request.params.id || null;
     if (!id) return response.status(400).json({ error: 'cannot delete' });;
 
     try {
         await Blog.findByIdAndRemove(id);
         response.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
+blogRouter.put('/:id', async (request, response, next) => {
+    const id = request.params.id;
+    if (!id) return response.status(400).json({ message: "Missing id parameter" });
+    const editBlog = request.body;
+
+    try {
+        const updatedBlog = await Blog.findByIdAndUpdate(id, editBlog, { new: true });
+        response.json(updatedBlog);
     } catch (error) {
         next(error);
     }

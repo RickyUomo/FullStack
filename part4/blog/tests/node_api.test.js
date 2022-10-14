@@ -122,7 +122,7 @@ test('if likes property is missing, the default value is 0', async () => {
     expect(response.body.likes).toEqual(0);
 });
 
-test.only('status code is 400', async () => {
+test('status code is 400', async () => {
     const newBlog = {
         title: null,
         author: "ricky",
@@ -137,6 +137,25 @@ test.only('status code is 400', async () => {
     }
 
     expect(res.statusCode).toBe(400);
+});
+
+test.only('can update blog', async () => {
+    const blogsStart = await helper.blogsInDb();
+    const blogToBeUpdated = blogsStart[0];
+    const newBlog = {
+        title: "Null person",
+        author: "ricky",
+        url: "www.mytime.com",
+        likes: 42
+    };
+
+    try {
+        var res = await api.put(`/api/blogs/${blogToBeUpdated.id}`).send(newBlog);
+    } catch (error) {
+        console.log(error);
+    }
+
+    expect(res.statusCode).toBe(200);
 });
 
 afterAll(() => {
