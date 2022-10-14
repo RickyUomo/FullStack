@@ -42,7 +42,7 @@ test('the first note is about HTTP methods', async () => {
     expect(author).toContain('Ricky');
 });
 
-test.only('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
     const newBlog = {
         title: "wonderful life",
         author: "ricky",
@@ -104,7 +104,7 @@ test('blog id is defined', async () => {
     expect(resultBlog.body.id).toBeDefined();
 });
 
-test.only('if likes property is missing, the default value is 0', async () => {
+test('if likes property is missing, the default value is 0', async () => {
     const newBlog = {
         title: "wonderful life",
         author: "ricky",
@@ -120,7 +120,24 @@ test.only('if likes property is missing, the default value is 0', async () => {
         .expect('Content-Type', /application\/json/);
 
     expect(response.body.likes).toEqual(0);
-})
+});
+
+test.only('status code is 400', async () => {
+    const newBlog = {
+        title: null,
+        author: "ricky",
+        url: null,
+        likes: 42
+    };
+
+    try {
+        var res = await api.post('/api/blogs').send(newBlog);
+    } catch (error) {
+        console.log(error);
+    }
+
+    expect(res.statusCode).toBe(400);
+});
 
 afterAll(() => {
     mongoose.connection.close();

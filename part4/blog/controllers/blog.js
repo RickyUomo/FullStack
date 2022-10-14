@@ -25,7 +25,10 @@ blogRouter.get('/:id', async (request, response) => {
 
 blogRouter.post('/', async (request, response) => {
     const blog = new Blog(request.body);
-    if (!blog.author || !blog.url || !blog.title) return response.status(400).end();
+    if (!blog.author || !blog.url || !blog.title) {
+        console.log('youre coming to error', blog);
+        return response.status(400).json({ message: "missing parameters" });
+    }
     if (!blog.likes) blog.likes = 0;
 
     try {
