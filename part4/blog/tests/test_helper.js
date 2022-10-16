@@ -7,16 +7,25 @@ const initialBlogs = [
         author: "Ricky",
         url: "https://github.com/RickyUomo",
         likes: 420,
-        id: "63433515235d446e804f001b"
+        id: "63433515235d446e804f001b",
     },
     {
         title: "Fullstack Dev 666",
         author: "Ricky Awesome",
         url: "https://github.com/RickyUomo",
         likes: 666,
-        id: "63433537235d446e804f001e"
+        id: "63433537235d446e804f001e",
     }
 ];
+
+const initialUsers = [
+    {
+        username: 'ricky',
+        name: 'super',
+        password: 'popo',
+        id: "634c63c4b71a0646ede15d68",
+    }
+]
 
 const nonExistingId = async () => {
     const blog = new Blog({ title: 'willremovethissoon', date: new Date() })
@@ -37,5 +46,5 @@ const usersInDb = async () => {
 }
 
 module.exports = {
-    initialBlogs, nonExistingId, blogsInDb, usersInDb
+    initialBlogs, initialUsers, nonExistingId, blogsInDb, usersInDb
 }

@@ -28,19 +28,20 @@ blogRouter.get('/:id', async (request, response, next) => {
 
 blogRouter.post('/', async (request, response, next) => {
     const { title, author, url, likes, userId } = request.body;
-    const user = await User.findById(userId);
-    const blog = new Blog({
-        title,
-        author,
-        url,
-        likes,
-        user: user._id
-    });
-
-    if (!blog.author || !blog.url || !blog.title) return response.status(400).json({ message: "missing parameters" });
-    if (!blog.likes) blog.likes = 0;
+    if (!author || !url || !title) return response.status(400).json({ message: "missing parameters" });
 
     try {
+        const user = await User.findById(userId);
+        const blog = new Blog({
+            title,
+            author,
+            url,
+            likes,
+            user: user._id
+        });
+
+        if (!blog.likes) blog.likes = 0;
+
         const savedBlog = await blog.save();
         user.blogs = user.blogs.concat(savedBlog._id);
         await user.save();

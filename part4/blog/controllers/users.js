@@ -14,9 +14,11 @@ usersRouter.get('/', async (request, response, next) => {
 usersRouter.get('/:id', async (request, response, next) => {
     const id = request.params.id;
     if (!id) throw Error('missing id');
+    console.log(['id'], id, typeof id);
 
     try {
         const user = await User.findById(id);
+        console.log(['user'], user);
         response.json(user);
     } catch (error) {
         next(error);

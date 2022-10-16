@@ -2,9 +2,9 @@ post http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Fullstack Dev 666",
-    "author": "Ricky Awesome",
+    "title": "Fulasdfjpoadjsf Dev 66556",
+    "author": "Ricky populat",
     "url": "https://github.com/RickyUomo",
     "likes": 666,
-    "userId": "634c63bdb71a0646ede15d65"
+    "userId": "634c63c4b71a0646ede15d68"
 }
