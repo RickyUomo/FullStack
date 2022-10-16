@@ -11,6 +11,18 @@ usersRouter.get('/', async (request, response, next) => {
     }
 });
 
+usersRouter.get('/:id', async (request, response, next) => {
+    const id = request.params.id;
+    if (!id) throw Error('missing id');
+
+    try {
+        const user = await User.findById(id);
+        response.json(user);
+    } catch (error) {
+        next(error);
+    }
+});
+
 usersRouter.post('/', async (request, response, next) => {
     const { username, name, password } = request.body;
     const existingUser = await User.findOne({ username });

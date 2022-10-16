@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/Blog');
+const User = require('../models/User');
 
 blogRouter.get('/', (request, response) => {
     Blog
@@ -24,15 +25,24 @@ blogRouter.get('/:id', async (request, response, next) => {
 })
 
 blogRouter.post('/', async (request, response, next) => {
-    const blog = new Blog(request.body);
-    if (!blog.author || !blog.url || !blog.title) {
-        console.log('youre coming to error', blog);
-        return response.status(400).json({ message: "missing parameters" });
-    }
+    const { title, author, url, likes, userId } = request.body;
+    const user = await User.findById(userId);
+    const blog = new Blog({
+        title,
+        author,
+        url,
+        likes,
+        user: user._id
+    });
+
+    if (!blog.author || !blog.url || !blog.title) return response.status(400).json({ message: "missing parameters" });
     if (!blog.likes) blog.likes = 0;
 
     try {
         const savedBlog = await blog.save();
+        user.blogs = user.blogs.concat(savedBlog._id);
+        await user.save();
+
         response.status(201).json(savedBlog);
     } catch (error) {
         next(error);
