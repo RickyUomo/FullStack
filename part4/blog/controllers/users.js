@@ -18,7 +18,6 @@ usersRouter.get('/:id', async (request, response, next) => {
 
     try {
         const user = await User.findById(id);
-        console.log(['user'], user);
         response.json(user);
     } catch (error) {
         next(error);
