@@ -37,11 +37,10 @@ const getTokenFrom = request => {
 
 blogRouter.post('/', async (request, response, next) => {
     const { title, author, url, likes, userId } = request.body;
-    const token = getTokenFrom(request);
-
     if (!author || !url || !title) return response.status(400).json({ message: "missing parameters" });
 
     try {
+        const token = getTokenFrom(request);
         const decodedToken = jwt.verify(token, process.env.SECRET);
         const user = await User.findById(userId);
         const blog = new Blog({
