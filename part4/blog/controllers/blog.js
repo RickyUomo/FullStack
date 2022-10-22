@@ -4,9 +4,8 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 blogRouter.get('/', async (request, response, next) => {
-
     try {
-        const allBlogs = await Blog.find({}).populate('user', { username: 1 });
+        const allBlogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
         response.json(allBlogs);
     } catch (error) {
         next(error);
