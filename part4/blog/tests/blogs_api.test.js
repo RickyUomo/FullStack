@@ -49,7 +49,7 @@ test('the first note is about HTTP methods', async () => {
 test.only('a valid blog can be added', async () => {
     const users = await helper.usersInDb();
     const user = users[0];
-    console.log(['user in test'], user);
+
     const newBlog = {
         title: "Fullstack Dev 66556",
         author: "Ricky populat",
@@ -61,6 +61,7 @@ test.only('a valid blog can be added', async () => {
     try {
         await api
             .post('/api/blogs')
+            .set('Authorization', 'abc123')
             .send(newBlog)
             .set('Accept', 'application/json')
             .expect(201)
