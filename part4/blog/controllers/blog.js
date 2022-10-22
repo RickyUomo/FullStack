@@ -39,12 +39,11 @@ const getTokenFrom = request => {
 blogRouter.post('/', async (request, response, next) => {
     const { title, author, url, likes, userId } = request.body;
     const token = getTokenFrom(request);
-    const decodedToken = jwt.verify(token, process.env.SECRET);
 
     if (!author || !url || !title) return response.status(400).json({ message: "missing parameters" });
-    if (!decodedToken.id) return response.status(401).json({ error: 'token missing or invalid' });
 
     try {
+        const decodedToken = jwt.verify(token, process.env.SECRET);
         const user = await User.findById(userId);
         const blog = new Blog({
             title,
@@ -53,8 +52,8 @@ blogRouter.post('/', async (request, response, next) => {
             likes,
             user: user._id
         });
-
         if (!blog.likes) blog.likes = 0;
+        if (!decodedToken.id) return response.status(401).json({ error: 'token missing or invalid' });
 
         const savedBlog = await blog.save();
         user.blogs = user.blogs.concat(savedBlog._id);
