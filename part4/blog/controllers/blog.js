@@ -26,22 +26,12 @@ blogRouter.get('/:id', async (request, response, next) => {
     }
 });
 
-const getTokenFrom = request => {
-    const authorization = request.get('authorization'); // authorization is token generated in login.js jwt.sign
-
-    if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-        return authorization.substring(7);
-    }
-    return null;
-};
-
 blogRouter.post('/', async (request, response, next) => {
     const { title, author, url, likes, userId } = request.body;
     if (!author || !url || !title) return response.status(400).json({ message: "missing parameters" });
 
     try {
-        const token = getTokenFrom(request);
-        const decodedToken = jwt.verify(token, process.env.SECRET);
+        const decodedToken = jwt.verify(request.token, process.env.SECRET);
         const user = await User.findById(userId);
         const blog = new Blog({
             title,
