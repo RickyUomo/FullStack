@@ -11,10 +11,9 @@ const tokenExtractor = (request, response, next) => {
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
         const authorizationToken = authorization.substring(7);
         request.token = authorizationToken;
-    } else response.status(401).json({ error: 'INVALID TOKEN!!!' });
+    }
 
     next();
-
 };
 
 const errorHandler = (error, request, response, next) => {

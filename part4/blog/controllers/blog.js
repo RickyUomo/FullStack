@@ -58,8 +58,18 @@ blogRouter.delete('/:id', async (request, response, next) => {
     if (!id) return response.status(400).json({ error: 'cannot delete' });;
 
     try {
-        await Blog.findByIdAndRemove(id);
-        response.status(204).end();
+        const decodedToken = jwt.verify(request.token, process.env.SECRET);
+        const blog = await Blog.findById(id);
+        if (!blog) return response.json({ message: "no blog found" });
+        if (!decodedToken) return response.json({ message: "no token found" });
+
+        if (blog?.user.toString() === decodedToken?.id) { // token user id matches blog creator
+            console.log('deleted');
+            await Blog.findByIdAndRemove(id);
+            response.status(204).end();
+        } else {
+            response.status(400).json({ message: "The user cannot delete this post" });
+        }
     } catch (error) {
         next(error);
     }
