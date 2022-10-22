@@ -1,9 +1,9 @@
 post http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzNGM2M2M0YjcxYTA2NDZlZGUxNWQ2OCIsImlhdCI6MTY2NjE4NTg0N30.7fJUvjtf559HeP0AYTxRpLOhMLqk9EuoWAcKtyxSwf0
+Authorization: bearer 8eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjYzNGM2M2M0YjcxYTA2NDZlZGUxNWQ2OCIsImlhdCI6MTY2NjE4NTg0N30.7fJUvjtf559HeP0AYTxRpLOhMLqk9EuoWAcKtyxSwf0
 
 {
-    "title": "Fulasdfjpoadjsf Dev 66556",
+    "title": "today is missing",
     "author": "Ricky populat",
     "url": "https://github.com/RickyUomo",
     "likes": 666,

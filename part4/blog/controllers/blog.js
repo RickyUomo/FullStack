@@ -1,7 +1,6 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/Blog');
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 
 blogRouter.get('/', async (request, response, next) => {
     try {
@@ -27,11 +26,13 @@ blogRouter.get('/:id', async (request, response, next) => {
 });
 
 blogRouter.post('/', async (request, response, next) => {
-    const { title, author, url, likes, userId } = request.body;
+    const { title, author, url, likes } = request.body;
     if (!author || !url || !title) return response.status(400).json({ message: "missing parameters" });
 
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET);
+        const userId = request.user.id || 0;
+        if (!userId) return response.status(400).json({ message: "cannot validate the token of userId" });
+
         const user = await User.findById(userId);
         const blog = new Blog({
             title,
@@ -41,7 +42,6 @@ blogRouter.post('/', async (request, response, next) => {
             user: user._id
         });
         if (!blog.likes) blog.likes = 0;
-        if (!decodedToken.id) return response.status(401).json({ error: 'token missing or invalid' });
 
         const savedBlog = await blog.save();
         user.blogs = user.blogs.concat(savedBlog._id);
@@ -55,20 +55,20 @@ blogRouter.post('/', async (request, response, next) => {
 
 blogRouter.delete('/:id', async (request, response, next) => {
     const id = request.params.id || null;
-    if (!id) return response.status(400).json({ error: 'cannot delete' });;
+    if (!id) return response.status(400).json({ error: 'missing id' });;
 
     try {
-        const decodedToken = jwt.verify(request.token, process.env.SECRET);
         const blog = await Blog.findById(id);
+        const user = request.user || null;
         if (!blog) return response.json({ message: "no blog found" });
-        if (!decodedToken) return response.json({ message: "no token found" });
+        if (!user) return response.json({ message: "no user found" });
 
-        if (blog?.user.toString() === decodedToken?.id) { // token user id matches blog creator
+        if (blog?.user?.toString() === user?.id) { // token user id matches blog creator
             console.log('deleted');
             await Blog.findByIdAndRemove(id);
             response.status(204).end();
         } else {
-            response.status(400).json({ message: "The user cannot delete this post" });
+            response.status(401).json({ message: "The user cannot delete this post" });
         }
     } catch (error) {
         next(error);

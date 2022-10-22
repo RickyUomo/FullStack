@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const morgan = require('morgan');
 morgan.token('reqBody', (req) => JSON.stringify(req.body));
 
@@ -16,6 +17,14 @@ const tokenExtractor = (request, response, next) => {
     next();
 };
 
+const userExtractor = (request, response, next) => {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    if (!decodedToken) return response.json({ message: "no token found" });
+    request.user = decodedToken;
+
+    next();
+};
+
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') return response.status(400).send({ error: 'malformatted id' });
     else if (error.name === 'ValidationError') return response.status(400).json({ error: error.message });
@@ -25,6 +34,6 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 
-const middleware = { morgan, unknownEndpoint, errorHandler, tokenExtractor };
+const middleware = { morgan, unknownEndpoint, errorHandler, tokenExtractor, userExtractor };
 
 module.exports = middleware;
