@@ -1,26 +1,30 @@
 const jwt = require('jsonwebtoken');
 const morgan = require('morgan');
+const User = require('../models/User');
 morgan.token('reqBody', (req) => JSON.stringify(req.body));
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' });
 };
 
-const tokenExtractor = (request, response, next) => {
+const tokenExtractor = (request, response) => {
     const authorization = request.get('authorization'); // authorization is token generated in login.js jwt.sign
 
     if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-        const authorizationToken = authorization.substring(7);
-        request.token = authorizationToken;
+        return authorization.substring(7);
+    } else {
+        return null;
     }
-
-    next();
 };
 
-const userExtractor = (request, response, next) => {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+const userExtractor = async (request, response, next) => {
+    const token = tokenExtractor(request);
+
+    if (!token) return next();
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
     if (!decodedToken) return response.json({ message: "no token found" });
-    request.user = decodedToken;
+    request.user = await User.findById(decodedToken.id);
 
     next();
 };
@@ -28,12 +32,12 @@ const userExtractor = (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
     if (error.name === 'CastError') return response.status(400).send({ error: 'malformatted id' });
     else if (error.name === 'ValidationError') return response.status(400).json({ error: error.message });
-    else if (error.name === 'JsonWebTokenError') return response.status(401).json({ error: 'invalid token' });
+    else if (error.name === 'JsonWebTokenError') return response.status(401).json({ error: 'invalid token hahha' });
     else if (error.name === 'TokenExpiredError') return response.status(401).json({ error: 'token expired' });
 
     next(error);
 };
 
-const middleware = { morgan, unknownEndpoint, errorHandler, tokenExtractor, userExtractor };
+const middleware = { morgan, unknownEndpoint, errorHandler, userExtractor };
 
 module.exports = middleware;

@@ -3,9 +3,13 @@ const Blog = require('../models/Blog');
 const User = require('../models/User');
 
 blogRouter.get('/', async (request, response, next) => {
+    const user = request.user || null;
+    if (!user) return response.json({ message: "no user found" });
+
     try {
-        const allBlogs = await Blog.find({}).populate('user', { username: 1, name: 1 });
-        response.json(allBlogs);
+        const userID = user._id.toString();
+        const foundUser = await User.findById(userID).populate('blogs', { title: 1, author: 1 });
+        response.json(foundUser.blogs);
     } catch (error) {
         next(error);
     }
@@ -13,12 +17,13 @@ blogRouter.get('/', async (request, response, next) => {
 
 blogRouter.get('/:id', async (request, response, next) => {
     const id = request.params.id || null;
+    const user = request.user || null;
 
     if (!id) return response.status(404).end();
+    if (!user) return response.json({ message: "no user found" });
 
     try {
         const blog = await Blog.findById(id);
-
         return response.json(blog)
     } catch (error) {
         next(error);
