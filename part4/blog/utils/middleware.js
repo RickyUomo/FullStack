@@ -19,21 +19,22 @@ const tokenExtractor = (request, response) => {
 
 const userExtractor = async (request, response, next) => {
     const token = tokenExtractor(request);
-
-    if (!token) return next();
-    const decodedToken = jwt.verify(token, process.env.SECRET);
-
-    if (!decodedToken) return response.json({ message: "no token found" });
-    request.user = await User.findById(decodedToken.id);
-
-    next();
+    if (!token) return;
+    try {
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+        if (!decodedToken) return response.json({ message: "no token found" });
+        request.user = await User.findById(decodedToken.id);
+        next();
+    } catch (error) {
+        next(error);
+    }
 };
 
 const errorHandler = (error, request, response, next) => {
-    if (error.name === 'CastError') return response.status(400).send({ error: 'malformatted id' });
-    else if (error.name === 'ValidationError') return response.status(400).json({ error: error.message });
-    else if (error.name === 'JsonWebTokenError') return response.status(401).json({ error: 'invalid token hahha' });
-    else if (error.name === 'TokenExpiredError') return response.status(401).json({ error: 'token expired' });
+    if (error.name === 'CastError') return response.status(400).send({ message: 'malformatted id' });
+    else if (error.name === 'ValidationError') return response.status(400).json({ message: error.message });
+    else if (error.name === 'JsonWebTokenError') return response.status(401).json({ message: 'invalid token hahha' });
+    else if (error.name === 'TokenExpiredError') return response.status(401).json({ message: 'token expired' });
 
     next(error);
 };
