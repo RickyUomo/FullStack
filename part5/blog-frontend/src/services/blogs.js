@@ -11,8 +11,14 @@ const getAll = async () => {
   const config = {
     headers: { Authorization: token }
   };
-  const response = await axios.get(baseUrl, config);
-  return response.data;
+
+  try {
+    const response = await axios.get(baseUrl, config);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+
 };
 
 const create = async newBlog => {

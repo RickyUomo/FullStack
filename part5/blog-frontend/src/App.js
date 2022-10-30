@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import moment from 'moment';
 
 const errorStyle = {
   "color": "red"
@@ -24,7 +25,18 @@ const App = () => {
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
+    const expired = window.localStorage.getItem('expiredTime');
+    const now = +moment();
+    if (expired && now > expired) handleLogout();
+
+    blogService.getAll()
+      .then(response => {
+        if (response.length) setBlogs(response);
+        else {
+          setNotification(response.message);
+          setNotificationStyle(errorStyle);
+        }
+      });
   }, [user, newBlog]);
 
   useEffect(() => {
@@ -41,7 +53,9 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password });
+      const endtTime = +moment().add(1, 'hour');
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
+      window.localStorage.setItem('expiredTime', JSON.stringify(endtTime));
       blogService.setToken(user.token);
       setUser(user);
       setUsername('');
@@ -168,7 +182,7 @@ const App = () => {
           </div>
       }
 
-      {blogs.length && blogs.map(blog =>
+      {blogs?.length && blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </div>
