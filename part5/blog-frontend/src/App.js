@@ -7,13 +7,18 @@ const errorStyle = {
   "color": "red"
 };
 
+const createdStyle = {
+  "color": "green"
+};
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({});
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
+  const [notificationStyle, setNotificationStyle] = useState(null);
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
@@ -42,9 +47,11 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (error) {
-      setErrorMessage('Wrong Credentials');
+      setNotification('Wrong Credentials');
+      setNotificationStyle(errorStyle);
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotification(null);
+        setNotificationStyle(null);
       }, 5000);
     }
   };
@@ -62,13 +69,23 @@ const App = () => {
       const createdBlog = { title, author, url };
       await blogService.create(createdBlog);
       setNewBlog(createdBlog);
+      setNotification(`${title} by ${author} created!`)
+      setNotificationStyle(createdStyle);
       setTitle('');
       setAuthor('');
       setUrl('');
-    } catch (error) {
-      setErrorMessage('Fail created blog');
+
       setTimeout(() => {
-        setErrorMessage(null);
+        setNotification(null);
+        setNotificationStyle(null);
+      }, 5000);
+
+    } catch (error) {
+      setNotification('Fail created blog');
+      setNotificationStyle(errorStyle);
+      setTimeout(() => {
+        setNotification(null);
+        setNotificationStyle(null);
       }, 5000);
     }
   };
@@ -139,7 +156,7 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <div>
-        <h4 style={errorStyle}>{errorMessage}</h4>
+        <h4 style={notificationStyle}>{notification}</h4>
       </div>
 
       {
