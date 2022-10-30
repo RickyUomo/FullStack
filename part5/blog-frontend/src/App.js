@@ -24,19 +24,13 @@ const App = () => {
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
 
-  useEffect(() => {
+  useEffect(() => { // call it later after performing the DOM updates
     const expired = window.localStorage.getItem('expiredTime');
     const now = +moment();
     if (expired && now > expired) handleLogout();
 
     blogService.getAll()
-      .then(response => {
-        if (response.length) setBlogs(response);
-        else {
-          setNotification(response.message);
-          setNotificationStyle(errorStyle);
-        }
-      });
+      .then(blogs => setBlogs(blogs));
   }, [user, newBlog]);
 
   useEffect(() => {
