@@ -74,6 +74,7 @@ const App = () => {
     window.localStorage.removeItem('loggedUser');
     blogService.setToken('');
     setUser(null);
+    setBlogs([]);
   };
 
   const addBlog = async (e) => {
@@ -164,7 +165,6 @@ const App = () => {
       <button type="submit">save</button>
     </form>
   );
-
 
   return (
     <div>
