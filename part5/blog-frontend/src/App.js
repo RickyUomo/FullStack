@@ -19,15 +19,11 @@ const createdStyle = {
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({});
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState(null);
   const [notificationStyle, setNotificationStyle] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
 
   useEffect(() => { // call it later after performing the DOM updates
     const expired = window.localStorage.getItem('expiredTime');
@@ -36,7 +32,7 @@ const App = () => {
 
     blogService.getAll()
       .then(blogs => setBlogs(blogs));
-  }, [user, newBlog]);
+  }, [user]);
 
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem('loggedUser');
@@ -76,18 +72,13 @@ const App = () => {
     setBlogs([]);
   };
 
-  const addBlog = async (e) => {
-    e.preventDefault();
-
+  const createBlog = async (newBlogObj) => {
     try {
-      const createdBlog = { title, author, url };
-      await blogService.create(createdBlog);
-      setNewBlog(createdBlog);
-      setNotification(`${title} by ${author} created!`)
+      const returnedBlogs = await blogService.create(newBlogObj);
+      console.log(['returnedBlogs'], returnedBlogs);
+      setBlogs(blogs.concat(returnedBlogs)); // dont't modify the original blogs array
+      setNotification(`${newBlogObj.title} by ${newBlogObj.author} created!`);
       setNotificationStyle(createdStyle);
-      setTitle('');
-      setAuthor('');
-      setUrl('');
 
       setTimeout(() => {
         setNotification(null);
@@ -124,15 +115,7 @@ const App = () => {
             <div>
               <p>{user.username} logged-in <LogoutForm handleLogout={handleLogout} /></p>
               <ToggleLabel cancelBtn="cancel" newBlogBtn="new blog">
-                <BlogForm
-                  addBlog={addBlog}
-                  title={title}
-                  author={author}
-                  url={url}
-                  handleTitleChange={({ target }) => setTitle(target.value)}
-                  handleAuthorChange={({ target }) => setAuthor(target.value)}
-                  handleUrlChange={({ target }) => setUrl(target.value)}
-                />
+                <BlogForm createBlog={createBlog} />
               </ToggleLabel>
             </div>
         }
