@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import React from 'react'
 import Blog from './components/Blog';
-import LoginForm from './components/LonginForm';
+import LoginForm from './components/LoginForm';
+import LogoutForm from './components/LogoutForm';
 import BlogForm from './components/BlogForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -102,10 +103,6 @@ const App = () => {
     }
   };
 
-  const logoutForm = () => (
-    <button onClick={handleLogout}>Log Out</button>
-  );
-
   return (
     <div>
       <React.StrictMode>
@@ -124,7 +121,7 @@ const App = () => {
               handlePasswordChange={({ target }) => setPassword(target.value)}
             /> :
             <div>
-              <p>{user.username} logged-in {logoutForm()}</p>
+              <p>{user.username} logged-in <LogoutForm handleLogout={handleLogout} /></p>
               <BlogForm
                 addBlog={addBlog}
                 title={title}
