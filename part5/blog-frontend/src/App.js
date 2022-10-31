@@ -5,23 +5,15 @@ import LoginForm from './components/LoginForm';
 import LogoutForm from './components/LogoutForm';
 import ToggleLabel from './components/ToggleLabel';
 import BlogForm from './components/BlogForm';
+import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import moment from 'moment';
 
-const errorStyle = {
-  "color": "red"
-};
-
-const createdStyle = {
-  "color": "green"
-};
-
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
-  const [notificationStyle, setNotificationStyle] = useState(null);
+  const [message, setMessage] = useState({});
 
   useEffect(() => { // call it later after performing the DOM updates
     const expired = window.localStorage.getItem('expiredTime');
@@ -42,7 +34,6 @@ const App = () => {
   }, [])
 
   const login = async (loginObj) => {
-
     try {
       const user = await loginService.login(loginObj);
       const endtTime = +moment().add(1, 'hour');
@@ -51,11 +42,9 @@ const App = () => {
       blogService.setToken(user.token);
       setUser(user);
     } catch (error) {
-      setNotification('Wrong Credentials');
-      setNotificationStyle(errorStyle);
+      setMessage({ error: true, content: 'Wrong Credentials' });
       setTimeout(() => {
-        setNotification(null);
-        setNotificationStyle(null);
+        setMessage({});
       }, 5000);
     }
   };
@@ -71,20 +60,16 @@ const App = () => {
     try {
       const returnedBlogs = await blogService.create(newBlogObj);
       setBlogs(blogs.concat(returnedBlogs)); // dont't modify the original blogs array
-      setNotification(`${newBlogObj.title} by ${newBlogObj.author} created!`);
-      setNotificationStyle(createdStyle);
+      setMessage({ error: false, content: `${newBlogObj.title} by ${newBlogObj.author} created!` });
 
       setTimeout(() => {
-        setNotification(null);
-        setNotificationStyle(null);
+        setMessage({});
       }, 5000);
 
     } catch (error) {
-      setNotification('Fail created blog');
-      setNotificationStyle(errorStyle);
+      setMessage({ error: true, content: 'Fail created blog' });
       setTimeout(() => {
-        setNotification(null);
-        setNotificationStyle(null);
+        setMessage({});
       }, 5000);
     }
   };
@@ -94,7 +79,7 @@ const App = () => {
       <React.StrictMode>
         <h2>blogs</h2>
         <div>
-          <h4 style={notificationStyle}>{notification}</h4>
+          <Notification message={message} />
         </div>
 
         {
