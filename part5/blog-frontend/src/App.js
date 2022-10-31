@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import React from 'react'
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -162,23 +163,25 @@ const App = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
-      <div>
-        <h4 style={notificationStyle}>{notification}</h4>
-      </div>
+      <React.StrictMode>
+        <h2>blogs</h2>
+        <div>
+          <h4 style={notificationStyle}>{notification}</h4>
+        </div>
 
-      {
-        user === null
-          ? loginForm() :
-          <div>
-            <p>{user.username} logged-in {logoutForm()}</p>
-            {blogForm()}
-          </div>
-      }
+        {
+          user === null
+            ? loginForm() :
+            <div>
+              <p>{user.username} logged-in {logoutForm()}</p>
+              {blogForm()}
+            </div>
+        }
 
-      {blogs?.length && blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
+        {blogs?.length && blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} />
+        )}
+      </React.StrictMode>
     </div>
   )
 };
