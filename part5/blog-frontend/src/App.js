@@ -20,8 +20,6 @@ const createdStyle = {
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [notification, setNotification] = useState(null);
   const [notificationStyle, setNotificationStyle] = useState(null);
 
@@ -43,18 +41,15 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async event => {
-    event.preventDefault();
+  const login = async (loginObj) => {
 
     try {
-      const user = await loginService.login({ username, password });
+      const user = await loginService.login(loginObj);
       const endtTime = +moment().add(1, 'hour');
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
       window.localStorage.setItem('expiredTime', JSON.stringify(endtTime));
       blogService.setToken(user.token);
       setUser(user);
-      setUsername('');
-      setPassword('');
     } catch (error) {
       setNotification('Wrong Credentials');
       setNotificationStyle(errorStyle);
@@ -75,7 +70,6 @@ const App = () => {
   const createBlog = async (newBlogObj) => {
     try {
       const returnedBlogs = await blogService.create(newBlogObj);
-      console.log(['returnedBlogs'], returnedBlogs);
       setBlogs(blogs.concat(returnedBlogs)); // dont't modify the original blogs array
       setNotification(`${newBlogObj.title} by ${newBlogObj.author} created!`);
       setNotificationStyle(createdStyle);
@@ -105,14 +99,8 @@ const App = () => {
 
         {
           user === null
-            ? <LoginForm
-              username={username}
-              password={password}
-              handleLogin={handleLogin}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-            /> :
-            <div>
+            ? <LoginForm login={login} />
+            : <div>
               <p>{user.username} logged-in <LogoutForm handleLogout={handleLogout} /></p>
               <ToggleLabel cancelBtn="cancel" newBlogBtn="new blog">
                 <BlogForm createBlog={createBlog} />
