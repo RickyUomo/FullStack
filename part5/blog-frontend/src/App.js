@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import React from 'react'
 import Blog from './components/Blog';
+import LoginForm from './components/LonginForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import moment from 'moment';
@@ -100,30 +101,6 @@ const App = () => {
     }
   };
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  );
-
   const logoutForm = () => (
     <button onClick={handleLogout}>Log Out</button>
   );
@@ -171,7 +148,13 @@ const App = () => {
 
         {
           user === null
-            ? loginForm() :
+            ? <LoginForm
+              username={username}
+              password={password}
+              handleLogin={handleLogin}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+            /> :
             <div>
               <p>{user.username} logged-in {logoutForm()}</p>
               {blogForm()}
