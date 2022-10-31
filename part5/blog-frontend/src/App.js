@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import React from 'react'
 import Blog from './components/Blog';
 import LoginForm from './components/LonginForm';
+import BlogForm from './components/BlogForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import moment from 'moment';
@@ -105,39 +106,6 @@ const App = () => {
     <button onClick={handleLogout}>Log Out</button>
   );
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        title
-        <input
-          type="text"
-          name="title"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        author
-        <input
-          type="text"
-          name="author"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url
-        <input
-          type="text"
-          name="url"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button type="submit">save</button>
-    </form>
-  );
-
   return (
     <div>
       <React.StrictMode>
@@ -157,7 +125,15 @@ const App = () => {
             /> :
             <div>
               <p>{user.username} logged-in {logoutForm()}</p>
-              {blogForm()}
+              <BlogForm
+                addBlog={addBlog}
+                title={title}
+                author={author}
+                url={url}
+                handleTitleChange={({ target }) => setTitle(target.value)}
+                handleAuthorChange={({ target }) => setAuthor(target.value)}
+                handleUrlChange={({ target }) => setUrl(target.value)}
+              />
             </div>
         }
 
