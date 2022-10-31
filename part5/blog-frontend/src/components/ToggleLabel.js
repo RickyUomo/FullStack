@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
-const ToggleLabel = (props) => {
+const ToggleLabel = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(true);
     const hideWhenVisible = { display: visible ? 'none' : '' };
     const showWhenVisible = { display: visible ? '' : 'none' };
 
     const toggleVisibility = () => setVisible(!visible);
+
+    useImperativeHandle(ref, () => {
+        return { toggleVisibility }; // returning an object for current property
+    });
 
     return (
         <div>
@@ -18,6 +22,6 @@ const ToggleLabel = (props) => {
             </div>
         </div>
     );
-};
+});
 
 export default ToggleLabel;

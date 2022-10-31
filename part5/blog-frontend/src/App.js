@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react'
+
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import LogoutForm from './components/LogoutForm';
 import ToggleLabel from './components/ToggleLabel';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
+
 import blogService from './services/blogs';
 import loginService from './services/login';
 import moment from 'moment';
@@ -15,6 +17,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [message, setMessage] = useState({});
+  const blogFormRef = useRef(); // it is an object with a current property
 
   useEffect(() => { // call it later after performing the DOM updates
     const expired = window.localStorage.getItem('expiredTime');
@@ -61,10 +64,12 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlogs)); // dont't modify the original blogs array
       setMessage({ error: false, content: `${newBlogObj.title} by ${newBlogObj.author} created!` });
 
+      blogFormRef.current.toggleVisibility();
+
       debounce(5000, () => setMessage({}));
     } catch (error) {
       setMessage({ error: true, content: 'Fail created blog' });
-
+      console.log(['error'], error);
       debounce(5000, () => setMessage({}));
     }
   };
@@ -82,7 +87,7 @@ const App = () => {
             ? <LoginForm login={login} />
             : <div>
               <p>{user.username} logged-in <LogoutForm handleLogout={handleLogout} /></p>
-              <ToggleLabel cancelBtn="cancel" newBlogBtn="new blog">
+              <ToggleLabel cancelBtn="cancel" newBlogBtn="new blog" ref={blogFormRef}>
                 <BlogForm createBlog={createBlog} />
               </ToggleLabel>
             </div>

@@ -18,7 +18,6 @@ const getAll = async () => {
   } catch (error) {
     return error.response.data;
   }
-
 };
 
 const create = async newBlog => {
