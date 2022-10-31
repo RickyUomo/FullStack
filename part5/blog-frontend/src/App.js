@@ -3,6 +3,7 @@ import React from 'react'
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import LogoutForm from './components/LogoutForm';
+import ToggleLabel from './components/ToggleLabel';
 import BlogForm from './components/BlogForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -122,15 +123,17 @@ const App = () => {
             /> :
             <div>
               <p>{user.username} logged-in <LogoutForm handleLogout={handleLogout} /></p>
-              <BlogForm
-                addBlog={addBlog}
-                title={title}
-                author={author}
-                url={url}
-                handleTitleChange={({ target }) => setTitle(target.value)}
-                handleAuthorChange={({ target }) => setAuthor(target.value)}
-                handleUrlChange={({ target }) => setUrl(target.value)}
-              />
+              <ToggleLabel cancelBtn="cancel" newBlogBtn="new blog">
+                <BlogForm
+                  addBlog={addBlog}
+                  title={title}
+                  author={author}
+                  url={url}
+                  handleTitleChange={({ target }) => setTitle(target.value)}
+                  handleAuthorChange={({ target }) => setAuthor(target.value)}
+                  handleUrlChange={({ target }) => setUrl(target.value)}
+                />
+              </ToggleLabel>
             </div>
         }
 
