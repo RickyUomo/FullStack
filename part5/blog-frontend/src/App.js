@@ -9,6 +9,7 @@ import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import moment from 'moment';
+import debounce from './utils/debounce';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -43,9 +44,7 @@ const App = () => {
       setUser(user);
     } catch (error) {
       setMessage({ error: true, content: 'Wrong Credentials' });
-      setTimeout(() => {
-        setMessage({});
-      }, 5000);
+      debounce(5000, () => setMessage({}));
     }
   };
 
@@ -62,15 +61,11 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlogs)); // dont't modify the original blogs array
       setMessage({ error: false, content: `${newBlogObj.title} by ${newBlogObj.author} created!` });
 
-      setTimeout(() => {
-        setMessage({});
-      }, 5000);
-
+      debounce(5000, () => setMessage({}));
     } catch (error) {
       setMessage({ error: true, content: 'Fail created blog' });
-      setTimeout(() => {
-        setMessage({});
-      }, 5000);
+
+      debounce(5000, () => setMessage({}));
     }
   };
 
@@ -98,7 +93,7 @@ const App = () => {
         )}
       </React.StrictMode>
     </div>
-  )
+  );
 };
 
 export default App;
