@@ -8,7 +8,7 @@ blogRouter.get('/', async (request, response, next) => {
 
     try {
         const userID = user._id.toString();
-        const foundUser = await User.findById(userID).populate('blogs', { title: 1, author: 1 });
+        const foundUser = await User.findById(userID).populate('blogs', { title: 1, author: 1, url: 1, likes: 1 });
         response.json(foundUser.blogs);
     } catch (error) {
         next(error);
