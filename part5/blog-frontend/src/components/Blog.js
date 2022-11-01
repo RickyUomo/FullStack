@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from './Button';
+import blogService from '../services/blogs';
 
 const Blog = ({ blog }) => {
   const blogStyle = {
@@ -10,16 +11,21 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   };
   const [visible, setVisible] = useState(false);
+  const [, lastUpdatedBlog] = useState();
 
-  const handleClick = () => {
-    setVisible(!visible);
+  const handleClick = () => setVisible(!visible);
+
+  const addLike = async () => {
+    blog.likes += 1;
+    const newBlog = await blogService.update(blog.id, blog);
+    lastUpdatedBlog(newBlog);
   };
 
   const showAll = () => (
     <>
       <p>Title: {blog.title} <Button handleClick={handleClick} name={visible ? 'hide' : 'view'} /></p>
       <p>URL: {blog.url}</p>
-      <p>Likes: {blog.likes} <Button name={"like"} /></p>
+      <p>Likes: {blog.likes} <Button handleClick={addLike} name={"like"} /></p>
       <p>Author: {blog.author}</p>
     </>
   );
