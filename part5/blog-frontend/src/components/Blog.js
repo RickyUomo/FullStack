@@ -2,6 +2,13 @@ import { useState } from "react";
 import Button from './Button';
 
 const Blog = ({ blog }) => {
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  };
   const [visible, setVisible] = useState(false);
 
   const handleClick = () => {
@@ -25,7 +32,7 @@ const Blog = ({ blog }) => {
   );
 
   return (
-    <div style={{ border: 'green solid 2px', margin: '5px', padding: '5px' }}>
+    <div style={blogStyle}>
       {visible ? showAll() : showLess()}
     </div>
   );
