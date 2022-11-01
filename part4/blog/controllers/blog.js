@@ -4,7 +4,7 @@ const User = require('../models/User');
 
 blogRouter.get('/', async (request, response, next) => {
     const user = request.user || null;
-    if (!user) return;
+    if (!user) return response.json({ message: 'No user found!!!' });
 
     try {
         const userID = user._id.toString();
