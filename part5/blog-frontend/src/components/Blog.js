@@ -25,7 +25,7 @@ const Blog = ({ blog }) => {
   );
 
   return (
-    <div>
+    <div style={{ border: 'green solid 2px', margin: '5px', padding: '5px' }}>
       {visible ? showAll() : showLess()}
     </div>
   );
