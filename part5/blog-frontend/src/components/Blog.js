@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from './Button';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, onDelete }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,14 +11,21 @@ const Blog = ({ blog }) => {
     marginBottom: 5
   };
   const [visible, setVisible] = useState(false);
-  const [, lastUpdatedBlog] = useState();
+  const [, blogChanged] = useState();
 
   const handleClick = () => setVisible(!visible);
 
   const addLike = async () => {
     blog.likes += 1;
     const newBlog = await blogService.update(blog.id, blog);
-    lastUpdatedBlog(newBlog);
+    blogChanged(newBlog);
+  };
+
+  const deleteBlog = async () => {
+    const choice = window.confirm(`Remove ${blog.title} by ${blog.author}`);
+    if (!choice) return;
+    await blogService.remove(blog.id);
+    onDelete(blog.id);
   };
 
   const showAll = () => (
@@ -27,6 +34,7 @@ const Blog = ({ blog }) => {
       <p>URL: {blog.url}</p>
       <p>Likes: {blog.likes} <Button handleClick={addLike} name={"like"} /></p>
       <p>Author: {blog.author}</p>
+      <Button handleClick={deleteBlog} name={'remove'} />
     </>
   );
 

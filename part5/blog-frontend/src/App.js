@@ -74,7 +74,18 @@ const App = () => {
     }
   };
 
-  console.log(['blogs'], blogs);
+  const handleDelete = (id) => {
+    setBlogs(currentPosts => {
+      let newBlogs;
+      const deletedBlogIndex = currentPosts.findIndex(blog => blog.id === id);
+
+      if (deletedBlogIndex !== -1) newBlogs = currentPosts.filter(b => b.id !== id);
+      else return;
+
+      return newBlogs;
+    });
+  };
+
   return (
     <div>
       <React.StrictMode>
@@ -95,7 +106,7 @@ const App = () => {
         }
 
         {blogs?.length && blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} onDelete={handleDelete} />
         )}
       </React.StrictMode>
     </div>
