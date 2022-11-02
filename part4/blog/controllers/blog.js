@@ -69,7 +69,6 @@ blogRouter.delete('/:id', async (request, response, next) => {
         if (!user) return response.json({ message: "no user found" });
 
         if (blog?.user?.toString() === user?.id) { // token user id matches blog creator
-            console.log('deleted');
             await Blog.findByIdAndRemove(id);
             response.status(204).end();
         } else {
