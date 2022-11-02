@@ -60,7 +60,7 @@ blogRouter.post('/', async (request, response, next) => {
 
 blogRouter.delete('/:id', async (request, response, next) => {
     const id = request.params.id || null;
-    if (!id) return response.status(400).json({ error: 'missing id' });;
+    if (!id) return response.status(400).json({ message: 'missing id' });;
 
     try {
         const blog = await Blog.findById(id);
