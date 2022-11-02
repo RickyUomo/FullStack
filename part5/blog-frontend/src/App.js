@@ -19,15 +19,6 @@ const App = () => {
   const [message, setMessage] = useState({});
   const blogFormRef = useRef(); // it is an object with a current property
 
-  useEffect(() => { // call it later after performing the DOM updates
-    const expired = window.localStorage.getItem('expiredTime');
-    const now = +moment();
-    if (expired && now > expired) handleLogout();
-
-    blogService.getAll()
-      .then(blogs => setBlogs(blogs));
-  }, [user]);
-
   useEffect(() => {
     const loggedUserJson = window.localStorage.getItem('loggedUser');
     if (loggedUserJson) {
@@ -36,6 +27,15 @@ const App = () => {
       blogService.setToken(loggedUser.token);
     }
   }, [])
+
+  useEffect(() => { // call it later after performing the DOM updates
+    const expired = window.localStorage.getItem('expiredTime');
+    const now = +moment();
+    if (expired && now > expired) handleLogout();
+
+    blogService.getAll()
+      .then(blogs => setBlogs(blogs));
+  }, [user]);
 
   const login = async (loginObj) => {
     try {
@@ -74,6 +74,7 @@ const App = () => {
     }
   };
 
+  console.log(['blogs'], blogs);
   return (
     <div>
       <React.StrictMode>
