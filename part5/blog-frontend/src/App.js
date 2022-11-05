@@ -82,7 +82,7 @@ const App = () => {
       if (deletedBlogIndex !== -1) newBlogs = currentPosts.filter(b => b.id !== id);
       else return;
 
-      return newBlogs;
+      return newBlogs; // return currentPosts by using splice will not work
     });
   };
 
