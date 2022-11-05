@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import PropTypes from 'prop-types'
 
 const ToggleLabel = forwardRef((props, ref) => {
     const [visible, setVisible] = useState(true);
@@ -23,5 +24,10 @@ const ToggleLabel = forwardRef((props, ref) => {
         </div>
     );
 });
+
+ToggleLabel.propTypes = {
+    cancelBtn: PropTypes.string.isRequired,
+    newBlogBtn: PropTypes.string.isRequired,
+};
 
 export default ToggleLabel;
