@@ -46,7 +46,7 @@ const Blog = ({ blog, onDelete }) => {
   );
 
   return (
-    <div style={blogStyle}>
+    <div className={"blog"} style={blogStyle}>
       {visible ? showAll() : showLess()}
     </div>
   );
