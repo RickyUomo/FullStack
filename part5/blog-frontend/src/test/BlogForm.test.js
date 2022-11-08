@@ -12,7 +12,7 @@ test('<BlogForm /> updates parent state and calls onSubmit', async () => {
 
     const titleInput = screen.getAllByRole('textbox')[0];
     const authorInput = screen.getAllByRole('textbox')[1];
-    const urlInput = screen.getAllByRole('textbox')[2];
+    const urlInput = screen.getByPlaceholderText('url here...');
     const sendBtn = screen.getByText('save');
 
     await user.type(titleInput, 'hello world');

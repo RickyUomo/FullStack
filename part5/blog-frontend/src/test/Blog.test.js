@@ -5,31 +5,55 @@ import { render, screen } from '@testing-library/react';
 import Blog from '../components/Blog';
 import Button from '../components/Button';
 
-describe('is Blog find', () => {
-    test('renders content', () => {
+describe('<Blog /> test', () => {
+    const setup = () => {
         const blog = {
             title: 'Component testing is done with react-testing-library',
             author: 'sophieie',
             url: 'www.love.com',
             likes: 43
         };
+        render(<Blog blog={blog} />)
+    };
 
-        render(<Blog blog={blog} />);
+    test('only renders title and author', () => {
+        setup();
 
-        const element = screen.getByText("sophieie", { exact: false });
-        // screen.debug(element);
-        expect(element).toBeDefined();
+        const author = screen.getByText("sophieie", { exact: false });
+        const title = screen.getByText("Component testing is done with react-testing-library", { exact: false });
+
+        expect(author).toBeDefined();
+        expect(title).toBeDefined();
     });
 
-    test.only('clicking showAll button', async () => {
-        const mockHandler = jest.fn();
+    test('render url and likes after clicking showAll button', async () => {
+        setup();
 
-        render(<Button handleClick={mockHandler} name={'view'} />);
-
+        const button = screen.getByRole('button', { name: 'view' });
         const user = userEvent.setup();
-        const button = screen.getByText('view');
         await user.click(button);
 
-        expect(mockHandler.mock.calls).toHaveLength(1);
+        const url = screen.getByText("www.love.com", { exact: false });
+        const likes = screen.getByText("43", { exact: false });
+
+        expect(url).toBeDefined();
+        expect(likes).toBeDefined();
     });
+
+    // test.only('click likes twice', async () => {
+    //     setup();
+    //     const addLikes = jest.fn();
+    //     render(<Button handleClick={addLikes} />)
+
+
+    //     const user = userEvent.setup();
+    //     const viewButton = screen.getByRole('button', { name: 'view' });
+    //     await user.click(viewButton);
+
+    //     const likesButton = screen.getByRole('button', { name: 'like' });
+    //     // await user.click(likesButton);
+    //     // const updatedLike = screen.getByText('Likes', { exact: false })
+    //     screen.debug(likesButton);
+
+    // });
 });
