@@ -1,6 +1,3 @@
-import { toggleImportant } from './reducers/noteReducer';
-import { useSelector } from 'react-redux';
-
 import Form from './components/Form';
 import Note from './components/Note';
 
