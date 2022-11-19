@@ -1,11 +1,11 @@
 import Form from './components/Form';
-import Note from './components/Note';
+import Notes from './components/Notes';
 
 const App = () => {
   return (
     <div>
       <Form />
-      <Note />
+      <Notes />
     </div>
   )
 }
