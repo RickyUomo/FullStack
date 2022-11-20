@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { createAddVote } from './reducers/anecdoteReducer';
+import { voteCreator } from './reducers/anecdoteReducer';
 
 const App = () => {
   const anecdotes = useSelector(state => state);
@@ -7,7 +7,7 @@ const App = () => {
 
   const vote = (id) => {
     console.log('vote', id);
-    dispatch(createAddVote(id));
+    dispatch(voteCreator(id));
   };
 
   return (

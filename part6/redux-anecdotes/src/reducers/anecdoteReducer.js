@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
-    case 'ADD': {
+    case 'VOTE': {
       const id = action.data.id;
       const itemToChange = state.find(item => item.id === id);
       const changedItem = {
@@ -37,9 +37,9 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-export const createAddVote = (id) => {
+export const voteCreator = (id) => {
   return {
-    type: 'ADD',
+    type: 'VOTE',
     data: { id }
   }
 };
