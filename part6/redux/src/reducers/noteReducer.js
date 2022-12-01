@@ -11,7 +11,7 @@ const initialState = [
         important: false,
         id: 2,
     },
-]
+];
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
