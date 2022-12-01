@@ -7,15 +7,13 @@ const Notification = () => {
     borderWidth: 1
   };
 
-  const notification = useSelector(state => {
-    console.log(state)
-  })
+  const notifications = useSelector(({ notifications }) => notifications);
 
   return (
-    <div style={style}>
-      render here notification...
+    <div style={notifications === '' ? null : style}>
+      {notifications}
     </div>
   )
-}
+};
 
-export default Notification
+export default Notification;
