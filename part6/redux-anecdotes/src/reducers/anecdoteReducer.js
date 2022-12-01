@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit';
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -19,43 +21,64 @@ const asObject = (anecdote) => {
 
 const initialState = anecdotesAtStart.map(asObject);
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch (action.type) {
-    case 'VOTE': {
-      const id = action.data.id;
-      const itemToChange = state.find(item => item.id === id);
-      const changedItem = {
-        ...itemToChange,
-        votes: itemToChange.votes + 1
-      }
-      return state.map(item => item.id === id ? changedItem : item);
-    }
-    case 'ADD':
-      return state.concat(action.data);
-    default:
-      return state
-  }
-};
-
-// action creators below
-export const voteCreator = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
-  }
-};
-
-export const newAnecdoteCreator = (content) => {
-  return {
-    type: 'ADD',
-    data: {
-      content,
-      id: getId(),
-      votes: 0
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      const newAnecdote = {
+        content: action.payload,
+        id: getId(),
+        votes: 0
+      };
+      state.push(newAnecdote);
+    },
+    voteAnecdote(state, action) {
+      const anecdoteToChange = state.find(a => a.id === action.payload);
+      anecdoteToChange.votes += 1;
     }
   }
-};
+});
 
-export default reducer;
+export default anecdoteSlice.reducer;
+export const { createAnecdote, voteAnecdote } = anecdoteSlice.actions;
+
+
+// const reducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case 'VOTE': {
+//       const id = action.data.id;
+//       const itemToChange = state.find(item => item.id === id);
+//       const changedItem = {
+//         ...itemToChange,
+//         votes: itemToChange.votes + 1
+//       }
+//       return state.map(item => item.id === id ? changedItem : item);
+//     }
+//     case 'ADD':
+//       return state.concat(action.data);
+//     default:
+//       return state
+//   }
+// };
+
+// // action creators below
+// export const voteCreator = (id) => {
+//   return {
+//     type: 'VOTE',
+//     data: { id }
+//   }
+// };
+
+// export const newAnecdoteCreator = (content) => {
+//   return {
+//     type: 'ADD',
+//     data: {
+//       content,
+//       id: getId(),
+//       votes: 0
+//     }
+//   }
+// };
+
+// export default reducer;
