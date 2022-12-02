@@ -13,6 +13,13 @@ const createNew = async (content) => {
     return res.data;
 };
 
-const noteService = { getAll, createNew }
+const toggleImportant = async (id) => {
+    const res = await axios.get(`${baseURL}/${id}`),
+        noteToChange = res.data;
+
+    await axios.put(`${baseURL}/${id}`, { ...noteToChange, important: !noteToChange.important });
+};
+
+const noteService = { getAll, createNew, toggleImportant }
 
 export default noteService;

@@ -27,12 +27,7 @@
     },
     {
       "content": "台灣",
-      "important": false,
-      "id": 6
-    },
-    {
-      "content": "台灣",
-      "important": false,
+      "important": true,
       "id": 7
     }
   ]
