@@ -17,26 +17,24 @@ const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const noteSlice = createSlice({
     name: 'notes',
-    initialState,
+    initialState: [],
     reducers: {
         createNote(state, action) {// action creator
-            const content = action.payload;
-            state.push({ // use Immer internally, so it can mutate the state
-                id: generateId(),
-                important: false,
-                content
-            })
+            state.push(action.payload);
         },
         toggleImportanceOf(state, action) {
             const id = action.payload;
             const noteToChange = state.find(n => n.id === id);
             noteToChange.important = !noteToChange.important;
+        },
+        setNote(state, action) {
+            return action.payload;
         }
     }
 });
 
 export default noteSlice.reducer;
-export const { createNote, toggleImportanceOf } = noteSlice.actions;
+export const { createNote, toggleImportanceOf, setNote } = noteSlice.actions;
 
 /* Standard Redux Reducers and action creator */
 
