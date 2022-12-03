@@ -14,5 +14,14 @@ const notificationSlice = createSlice({
     }
 });
 
-export default notificationSlice.reducer;
 export const { createNotification, removeNotification } = notificationSlice.actions;
+
+let hide; // sanitize the timer before a new one register
+export const setNotification = (content, displayTime) => async dispatch => {
+    dispatch(createNotification(`You voted ${content}`));
+
+    clearTimeout(hide);
+    hide = setTimeout(() => dispatch(removeNotification()), displayTime * 1000);
+};
+
+export default notificationSlice.reducer;
