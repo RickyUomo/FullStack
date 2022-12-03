@@ -3,17 +3,22 @@ import Notes from './components/Notes';
 import VisibilityFilter from './components/VisibilityFilter';
 import noteService from './service/note';
 import { useEffect } from 'react';
-import { setNote } from './reducers/noteReducer';
+import { setNote, initializeNotes } from './reducers/noteReducer';
 import { useDispatch } from 'react-redux';
 
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    noteService
-      .getAll().then(notes => {
-        dispatch(setNote(notes));
-      })
+    // noteService      // move fetching into note~Reducer file
+    //   .getAll().then(notes => {
+    //     dispatch(setNote(notes));
+    //   })
+
+    dispatch(initializeNotes());
+
   }, []);
+
+
 
   return (
     <div>
